@@ -1,0 +1,138 @@
+% Copyright 2020 by Keitaro Hashimoto
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+\mode<presentation>
+
+\RequirePackage[absolute,overlay]{textpos}
+\RequirePackage{tikz}
+\RequirePackage{calc}
+
+\usecolortheme{default}
+\useinnertheme{circles}
+\useoutertheme{infolines}
+
+% itemizeの頭 (1段目)
+\setbeamertemplate{itemize item}{\raise-.5pt\hbox{\large\donotcoloroutermaths$\bullet$}}
+% itemizeの頭 (2段目)
+\setbeamertemplate{itemize subitem}{\tiny\hbox{\normalsize\donotcoloroutermaths$\blacktriangleright$}}
+
+\setlength{\labelsep}{3pt}
+
+% 左右の余白
+\setbeamersize{text margin left=1em,text margin right=1em}
+
+% Beamerの設定
+\usefonttheme{structurebold} % タイトル部を太字
+\setbeamerfont{alerted text}{series=\bfseries} % Alertを太字
+\setbeamerfont{section in toc}{series=\mdseries} % 目次は太字にしない
+\setbeamerfont{frametitle}{size=\Large} % フレームタイトル文字サイズ
+\setbeamerfont{title}{size=\LARGE}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{author}{size=\large} % 著者文字サイズ
+\setbeamerfont{institute}{size=\small}
+\setbeamerfont{date}{size=\small}  % 日付文字サイズ
+
+% 色の定義
+\definecolor{framebg}{RGB}{243,243,243}
+\definecolor{ThemeGreen}{RGB}{0,165,139}
+\definecolor{EmphRed}{RGB}{227,61,96}
+\definecolor{ThemeYellow}{RGB}{179,191,0}
+\definecolor{MainBlack}{RGB}{0,0,33}
+
+% 色の設定
+\setbeamercolor{structure}{fg=ThemeGreen} % 全体カラー
+\setbeamercolor{background canvas}{bg=framebg} % フレームの背景
+\setbeamercolor{title}{fg=MainBlack}
+
+\setbeamercolor{normal text}{fg=MainBlack}  % 本文カラー
+\setbeamercolor{block title example}{fg=ThemeYellow} % ブロック部分タイトルカラー
+\setbeamercolor{alerted text}{fg=EmphRed} % \alert 文字カラー
+
+\setbeamertemplate{blocks}[rounded][shadow=true] % blockの角をまるく+影付き
+\setbeamertemplate{navigation symbols}{} % ナビゲーションシンボルを消す
+\setbeamertemplate{headline}{} % ヘッダーを消す
+\setbeamertemplate{footline}{} % フッターを消す
+\beamertemplatetextbibitems % 参考文献リストのアイコンを消す
+
+%タイトルページ
+\setbeamertemplate{title page}{%
+    \begin{beamercolorbox}[leftskip=1em, wd=.95\textwidth]{frametitle}
+        {\usebeamerfont{date} \usebeamercolor[fg]{structure} \insertdate\par}%
+        \bigskip
+        {\usebeamerfont{title} \usebeamercolor[fg]{title} \inserttitle \par}%
+        \ifx\insertsubtitle\@empty
+        \else
+            \medskip
+            {\usebeamerfont{subtitle}\usebeamercolor[fg]{title}\insertsubtitle \par}%
+        \fi
+        \bigskip%
+        \resizebox*{0.95\textwidth}{!}{%
+        \begin{tikzpicture}
+            % \draw [color=ThemeGreen, thick, dash pattern=on 3pt off 2pt] (0,1) -- (\linewidth-\pgflinewidth, 1);
+            \foreach \p in {2,4,6,8,10,12,14}
+            \draw[thick, dash pattern=on 3pt off 2pt] (-2+\p,0) parabola [parabola height=.5pt] (-1+\p,0) parabola [parabola height=-.5pt] (\p,0);
+        \end{tikzpicture}}
+
+        \medskip%
+
+        {\usebeamerfont{institute} \usebeamercolor[fg]{structure} \insertinstitute \par}%
+        \smallskip%
+        {\usebeamerfont{author} \usebeamercolor[fg]{structure} \insertauthor\par}%
+        \medskip%
+        {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic}%
+    \end{beamercolorbox}
+}
+
+% スライドタイトル
+\setbeamertemplate{frametitle}{%
+\begin{textblock*}{\paperwidth}(0mm, 0mm)%
+    \begin{flushright}
+        \usebeamercolor[fg]{structure}%
+        {\Large \textbf{\insertframenumber}/}{\normalsize\inserttotalframenumber}
+        \hspace*{.2em}
+    \end{flushright}
+\end{textblock*}%
+\vspace{3.5mm}
+\insertframetitle\par
+\vspace{-2mm}
+\resizebox*{\linewidth}{!}{%
+\begin{tikzpicture}
+  \foreach \p in {2,4,6,8,10,12,14}
+    \draw[thick, dash pattern=on 3pt off 2pt] (-2+\p,0) parabola [parabola height=.5pt] (-1+\p,0) parabola [parabola height=-.5pt] (\p,0);
+\end{tikzpicture}}
+}
+
+% allowframebreaks をつけと、タイトルに連番がつく
+\newcounter{cont}
+\setbeamertemplate{frametitle continuation}{%
+    \setcounter{cont}{\beamer@endpageofframe}%
+    \addtocounter{cont}{1}%
+    \addtocounter{cont}{-\beamer@startpageofframe}%
+    \ifnum \value{cont}>1%
+    [\insertcontinuationcount/\arabic{cont}]
+    \fi%
+}
+
+% section pageのデザイン
+\setbeamertemplate{section page}
+{
+    \begin{beamercolorbox}[sep=12pt,center]{section title}
+        \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+}
+
+% 背景色の無いblock:descriptionの代わりに使える
+\newenvironment<>{descriptionblock}[1]{%
+    \setbeamertemplate{blocks}[default]%
+    \setbeamercolor{block title}{fg=EmphRed}%
+    \begin{block}#2{#1}}{\end{block}
+}
+
+\mode
+<all>
